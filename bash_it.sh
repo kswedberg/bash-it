@@ -17,31 +17,26 @@ do
   source $config_file
 done
 
-# Tab Completion
-COMPLETION="${BASH}/completion/*.bash"
-for config_file in $COMPLETION
+# Load enabled aliases, completion, plugins
+for file_type in "aliases" "completion" "plugins"
 do
-  source $config_file
+  if [ ! -d "${BASH}/${file_type}/enabled" ]
+  then
+    mkdir "${BASH}/${file_type}/enabled"
+    ln -s ${BASH}/${file_type}/available/* "${BASH}/${file_type}/enabled"
+  fi
+  FILES="${BASH}/${file_type}/enabled/*.bash"
+  for config_file in $FILES
+  do
+    source $config_file
+  done
 done
 
-# Plugins
-if [ ! -d "${BASH}/plugins/enabled" ]
+# Load any custom aliases that the user has added
+if [ -e "${BASH}/aliases/custom.aliases.bash" ]
 then
-  mkdir "${BASH}/plugins/enabled"
-  ln -s ${BASH}/plugins/available/* "${BASH}/plugins/enabled"
+  source "${BASH}/aliases/custom.aliases.bash"
 fi
-PLUGINS="${BASH}/plugins/enabled/*.bash"
-for config_file in $PLUGINS
-do
-  source $config_file
-done
-
-# Aliases
-FUNCTIONS="${BASH}/aliases/*.bash"
-for config_file in $FUNCTIONS
-do
-  source $config_file
-done
 
 # Custom
 CUSTOM="${BASH}/custom/*.bash"
@@ -60,6 +55,13 @@ fi
 PREVIEW="less"
 [ -s /usr/bin/gloobus-preview ] && PREVIEW="gloobus-preview"
 [ -s /Applications/Preview.app ] && PREVIEW="/Applications/Preview.app"
+
+# Load all the Jekyll stuff
+
+if [ -e $HOME/.jekyllconfig ]
+then
+  . $HOME/.jekyllconfig
+fi
 
 
 #
