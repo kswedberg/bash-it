@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Initialize Bash It
 
 # Reload Library
@@ -21,6 +21,9 @@ then
     unset $BASH_THEME;
 fi
 
+# Load composure first, so we support function metadata
+source "${BASH_IT}/lib/composure.sh"
+
 # Load colors first so they can be use in base theme
 source "${BASH_IT}/themes/colors.theme.bash"
 source "${BASH_IT}/themes/base.theme.bash"
@@ -35,17 +38,7 @@ done
 # Load enabled aliases, completion, plugins
 for file_type in "aliases" "completion" "plugins"
 do
-  if [ ! -d "${BASH_IT}/${file_type}/enabled" ]
-  then
-    continue
-  fi
-  FILES="${BASH_IT}/${file_type}/enabled/*.bash"
-  for config_file in $FILES
-  do
-    if [ -e "${config_file}" ]; then
-      source $config_file
-    fi
-  done
+  _load_bash_it_files $file_type
 done
 
 # Load any custom aliases that the user has added

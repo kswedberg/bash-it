@@ -1,11 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 prompt_setter() {
   # Save history
   history -a
   history -c
   history -r
-  PS1="(\t) $(scm_char) [$blue\u$reset_color@$green\H$reset_color] $yellow\w${reset_color}$(scm_prompt_info)$(rvm_version_prompt) $reset_color "
+  PS1="(\t) $(scm_char) [$blue\u$reset_color@$green\H$reset_color] $yellow\w${reset_color}$(scm_prompt_info)$(ruby_version_prompt) $reset_color "
   PS2='> '
   PS4='+ '
 }

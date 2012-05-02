@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # This theme was obviously inspired a lot by 
 #
@@ -98,7 +98,7 @@ function ip_prompt_info() {
 # Displays virtual info prompt (virtualenv/rvm)
 function virtual_prompt_info() {
     local virtual_env_info=$(virtualenv_prompt)
-    local rvm_info=$(rvm_version_prompt)
+    local rvm_info=$(ruby_version_prompt)
     local virtual_prompt=""
 
     local prefix=${VIRTUAL_THEME_PROMPT_PREFIX}

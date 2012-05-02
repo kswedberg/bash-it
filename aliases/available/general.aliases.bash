@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # List directory contents
 alias sl=ls
@@ -46,7 +46,7 @@ alias -- -="cd -"        # Go back
 alias h='history'
 
 # Tree
-if [ ! -x "$(which tree)" ]
+if [ ! -x "$(which tree 2>/dev/null)" ]
 then
   alias tree="find . -print | sed -e 's;[^/]*/;|____;g;s;____|; |;g'"
 fi
