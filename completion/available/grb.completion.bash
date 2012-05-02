@@ -31,7 +31,6 @@ if which grb >/dev/null 2>&1; then
   }
   _complete_git() {
     if [ -d .git ]; then
-      commands=(push new mv rm pull track remote_add remote_rm prune)
       branches=`git branch | cut -c 3-`
       tags=`git tag`
       _completion_list $branches $tags
@@ -48,11 +47,11 @@ if which grb >/dev/null 2>&1; then
     local prev=${COMP_WORDS[COMP_CWORD-1]}
 
     case $prev in
-      pull|remote_rm|track)
+      pull|remote_rm|rm|track)
         _complete_git_remote
         return 0
         ;;
-      mv|push|rm)
+      mv|push)
         _complete_git
         return 0
         ;;
