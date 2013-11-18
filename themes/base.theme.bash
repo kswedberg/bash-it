@@ -31,7 +31,7 @@ RBFU_THEME_PROMPT_PREFIX=' |'
 RBFU_THEME_PROMPT_SUFFIX='|'
 
 function scm {
-  if [[ -d .git ]]; then SCM=$SCM_GIT
+  if [[ -f .git/HEAD ]]; then SCM=$SCM_GIT
   elif [[ -n "$(git symbolic-ref HEAD 2> /dev/null)" ]]; then SCM=$SCM_GIT
   elif [[ -d .hg ]]; then SCM=$SCM_HG
   elif [[ -n "$(hg root 2> /dev/null)" ]]; then SCM=$SCM_HG
@@ -108,8 +108,8 @@ function hg_prompt_vars {
     fi
     SCM_PREFIX=${HG_THEME_PROMPT_PREFIX:-$SCM_THEME_PROMPT_PREFIX}
     SCM_SUFFIX=${HG_THEME_PROMPT_SUFFIX:-$SCM_THEME_PROMPT_SUFFIX}
-    SCM_BRANCH=$(hg summary 2> /dev/null | grep branch | awk '{print $2}')
-    SCM_CHANGE=$(hg summary 2> /dev/null | grep parent | awk '{print $2}')
+    SCM_BRANCH=$(hg summary 2> /dev/null | grep branch: | awk '{print $2}')
+    SCM_CHANGE=$(hg summary 2> /dev/null | grep parent: | awk '{print $2}')
 }
 
 function rvm_version_prompt {
@@ -132,13 +132,23 @@ function rbfu_version_prompt {
   fi
 }
 
+function chruby_version_prompt {
+  if declare -f -F chruby &> /dev/null; then
+    if declare -f -F chruby_auto &> /dev/null; then
+      chruby_auto
+    fi
+    chruby=$(ruby --version | awk '{print $1, $2;}') || return
+    echo -e "$CHRUBY_THEME_PROMPT_PREFIX$chruby$CHRUBY_THEME_PROMPT_SUFFIX"
+  fi
+}
+
 function ruby_version_prompt {
-  echo -e "$(rbfu_version_prompt)$(rbenv_version_prompt)$(rvm_version_prompt)"
+  echo -e "$(rbfu_version_prompt)$(rbenv_version_prompt)$(rvm_version_prompt)$(chruby_version_prompt)"
 }
 
 function virtualenv_prompt {
-  if which virtualenv &> /dev/null; then
-    virtualenv=$([ ! -z "$VIRTUAL_ENV" ] && echo "`basename $VIRTUAL_ENV`") || return
+  if [[ -n "$VIRTUAL_ENV" ]]; then
+    virtualenv=`basename "$VIRTUAL_ENV"`
     echo -e "$VIRTUALENV_THEME_PROMPT_PREFIX$virtualenv$VIRTUALENV_THEME_PROMPT_SUFFIX"
   fi
 }
